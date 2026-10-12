@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cartucho — Loja de jogos digitais</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;800&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#ECEAF6; --surface:#fff; --ink:#1B1646; --muted:#5C5887;
+  --pink:#FF4F7E; --cyan:#1FB8BE; --sun:#FFC933; --line:#CFCBE6;
+  --display:"Bricolage Grotesque","Trebuchet MS",sans-serif;
+  --body:"Figtree",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--bg:#16122E;--surface:#221C45;--ink:#F1EEFF;--muted:#A9A3D6;--line:#383064}
+}
+:root[data-theme="dark"]{--bg:#16122E;--surface:#221C45;--ink:#F1EEFF;--muted:#A9A3D6;--line:#383064}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1rem/1.55 var(--body)}
+h1,h2,h3{font-family:var(--display);line-height:1.05;margin:0}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--cyan);outline-offset:2px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+button{font:inherit;color:inherit;cursor:pointer}
+
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--bg);border-bottom:2px solid var(--ink)}
+.bar{display:flex;align-items:center;gap:16px;padding:12px 20px;max-width:1120px;margin:0 auto}
+.logo{font:800 1.5rem var(--display);text-decoration:none;display:flex;align-items:center;gap:8px}
+.logo i{width:22px;height:26px;background:var(--pink);border:2px solid var(--ink);border-radius:3px 3px 0 0;position:relative}
+.logo i::after{content:"";position:absolute;left:3px;right:3px;bottom:-2px;height:5px;background:var(--ink)}
+nav{display:flex;gap:18px;margin-left:12px}
+nav a{text-decoration:none;font-weight:600}
+nav a:hover{text-decoration:underline;text-decoration-thickness:3px;text-decoration-color:var(--pink)}
+.search{flex:1;max-width:340px;margin-left:auto}
+.search input{width:100%;padding:9px 14px;border:2px solid var(--ink);border-radius:999px;background:var(--surface);color:var(--ink);font:inherit}
+.cartbtn{border:2px solid var(--ink);background:var(--sun);color:#1B1646;border-radius:999px;padding:8px 16px;font-weight:600;box-shadow:3px 3px 0 var(--ink)}
+.cartbtn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;padding:64px 0 48px}
+.hero h1{font-size:clamp(2.6rem,7vw,5rem);font-weight:800;letter-spacing:-.03em}
+.hero p{font-size:1.15rem;color:var(--muted);max-width:44ch;margin:20px 0 28px}
+.btn{display:inline-block;border:2px solid var(--ink);background:var(--pink);color:#fff;border-radius:12px;padding:12px 22px;font-weight:600;text-decoration:none;box-shadow:4px 4px 0 var(--ink)}
+.btn:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--ink)}
+.shelf{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.slot{aspect-ratio:3/4;border:2px dashed var(--ink);border-radius:8px 8px 0 0;display:grid;place-items:center;color:var(--muted);font-weight:600;font-size:.8rem;background:color-mix(in srgb,var(--surface) 60%,transparent)}
+.slot:nth-child(1){border-color:var(--pink)}.slot:nth-child(5){border-color:var(--cyan)}.slot:nth-child(9){border-color:var(--sun)}
+@media (prefers-reduced-motion:no-preference){
+  .slot{animation:blink 2.4s steps(2,end) infinite}
+  .slot:nth-child(odd){animation-delay:.6s}
+  @keyframes blink{50%{opacity:.55}}
+}
+
+section.block{padding:40px 0 56px}
+.head{display:flex;flex-wrap:wrap;gap:16px;align-items:end;justify-content:space-between;margin-bottom:24px}
+.head h2{font-size:clamp(1.8rem,4vw,2.6rem);font-weight:800}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:2px solid var(--ink);background:var(--surface);border-radius:999px;padding:6px 14px;font-weight:600}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:20px}
+.card{background:var(--surface);border:2px solid var(--ink);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.card .cover{aspect-ratio:3/4;background:var(--line);object-fit:cover;width:100%}
+.card .info{padding:14px;display:flex;flex-direction:column;gap:6px;flex:1}
+.card h3{font-size:1.15rem}
+.card small{color:var(--muted)}
+.card .row{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:10px}
+.price{font:800 1.2rem var(--display)}
+.add{border:2px solid var(--ink);background:var(--cyan);color:#1B1646;border-radius:8px;padding:6px 12px;font-weight:600}
+
+.empty{border:2px dashed var(--ink);border-radius:18px;padding:48px 24px;text-align:center;background:var(--surface)}
+.empty h3{font-size:1.6rem;margin-bottom:8px}
+.empty p{color:var(--muted);max-width:46ch;margin:0 auto}
+
+.perks{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
+.perk{border-left:6px solid var(--pink);padding:4px 0 4px 16px}
+.perk:nth-child(2){border-color:var(--cyan)}.perk:nth-child(3){border-color:var(--sun)}
+.perk h3{font-size:1.2rem;margin-bottom:4px}.perk p{margin:0;color:var(--muted)}
+
+footer{border-top:2px solid var(--ink);padding:28px 0;color:var(--muted)}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
+
+.drawer{position:fixed;inset:0 0 0 auto;width:min(380px,100%);background:var(--surface);border-left:2px solid var(--ink);z-index:30;transform:translateX(100%);transition:transform .25s;display:flex;flex-direction:column;padding:calc(20px + env(safe-area-inset-top,0px)) 20px calc(20px + env(safe-area-inset-bottom,0px))}
+.drawer.open{transform:none}
+.drawer header{position:static;border:0;display:flex;justify-content:space-between;align-items:center;background:none;padding:0 0 12px}
+.drawer h2{font-size:1.6rem}
+.items{flex:1;overflow:auto}
+.item{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.item button{border:0;background:none;color:var(--pink);font-weight:600;padding:0}
+.total{display:flex;justify-content:space-between;font:800 1.3rem var(--display);padding:14px 0}
+.scrim{position:fixed;inset:0;background:rgba(20,16,50,.5);z-index:20;display:none}
+.scrim.open{display:block}
+
+@media (max-width:760px){
+  .hero{grid-template-columns:1fr;padding-top:36px}
+  nav{display:none}
+  .bar{flex-wrap:wrap}.search{order:3;max-width:none;flex-basis:100%;margin:0}
+  .cartbtn{margin-left:auto}
+}
+@media (prefers-reduced-motion:reduce){.drawer{transition:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="bar">
+    <a class="logo" href="#topo"><i></i>Cartucho</a>
+    <nav aria-label="Principal">
+      <a href="#catalogo">Catálogo</a>
+      <a href="#vantagens">Vantagens</a>
+    </nav>
+    <div class="search"><input id="q" type="search" placeholder="Buscar jogo" aria-label="Buscar jogo"></div>
+    <button class="cartbtn" id="openCart" aria-label="Abrir carrinho">Carrinho (<span id="count">0</span>)</button>
+  </div>
+</header>
+
+<main id="topo">
+  <div class="wrap">
+    <div class="hero">
+      <div>
+        <h1>Sua próxima partida começa aqui.</h1>
+        <p>Compre jogos digitais, receba a chave na hora e comece a jogar. O catálogo está começando agora e novos títulos chegam em breve.</p>
+        <a class="btn" href="#catalogo">Ver catálogo</a>
+      </div>
+      <div class="shelf" aria-hidden="true">
+        <div class="slot">vago</div><div class="slot">vago</div><div class="slot">vago</div>
+        <div class="slot">vago</div><div class="slot">vago</div><div class="slot">vago</div>
+        <div class="slot">vago</div><div class="slot">vago</div><div class="slot">vago</div>
+      </div>
+    </div>
+
+    <section class="block" id="catalogo">
+      <div class="head">
+        <h2>Catálogo</h2>
+        <div class="chips" id="chips" role="group" aria-label="Filtrar por plataforma"></div>
+      </div>
+      <div class="grid" id="grid"></div>
+      <div class="empty" id="empty">
+        <h3>Nenhum jogo na prateleira ainda</h3>
+        <p>Assim que os primeiros títulos forem cadastrados, eles aparecem aqui com preço, plataforma e botão de compra.</p>
+      </div>
+    </section>
+
+    <section class="block" id="vantagens">
+      <div class="head"><h2>Como a loja funciona</h2></div>
+      <div class="perks">
+        <div class="perk"><h3>Entrega imediata</h3><p>A chave de ativação chega por e-mail logo após o pagamento.</p></div>
+        <div class="perk"><h3>Pagamento simples</h3><p>Pix, cartão ou boleto, direto no carrinho.</p></div>
+        <div class="perk"><h3>Suporte humano</h3><p>Problema com uma chave? Respondemos em até um dia útil.</p></div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap"><span>© 2026 Cartucho. Todos os direitos reservados.</span><span>contato@cartucho.example</span></div>
+</footer>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="Carrinho" aria-hidden="true">
+  <header><h2>Seu carrinho</h2><button class="chip" id="closeCart">Fechar</button></header>
+  <div class="items" id="items"></div>
+  <div class="total"><span>Total</span><span id="total">R$ 0,00</span></div>
+  <button class="btn" id="checkout" style="width:100%;text-align:center">Finalizar compra</button>
+</aside>
+
+<script>
+/* ---------------------------------------------------------
+   CATÁLOGO: para adicionar um jogo, inclua um objeto neste formato:
+   { id:1, title:"Nome do jogo", platform:"PC", price:59.9, cover:"url-da-capa.jpg" }
+   --------------------------------------------------------- */
+const GAMES = [
+  { id: 1, title: "Counter-Strike 2", platform: "PC", price: 0, cover: "" }
+];
+
+const brl = n => n.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+const $ = id => document.getElementById(id);
+let platform = "Todos", query = "", cart = [];
+
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+
+function renderChips(){
+  const plats = ["Todos", ...new Set(GAMES.map(g=>g.platform))];
+  $("chips").innerHTML = GAMES.length ? plats.map(p=>
+    `<button class="chip" aria-pressed="${p===platform}" data-p="${esc(p)}">${esc(p)}</button>`).join("") : "";
+}
+
+function renderGrid(){
+  const list = GAMES.filter(g =>
+    (platform==="Todos"||g.platform===platform) &&
+    g.title.toLowerCase().includes(query.toLowerCase()));
+  $("grid").innerHTML = list.map(g=>`
+    <article class="card">
+      ${g.cover?`<img class="cover" src="${esc(g.cover)}" alt="Capa de ${esc(g.title)}">`:`<div class="cover"></div>`}
+      <div class="info">
+        <h3>${esc(g.title)}</h3><small>${esc(g.platform)}</small>
+        <div class="row"><span class="price">${g.price?brl(g.price):"Grátis"}</span>
+        <button class="add" data-id="${g.id}">Comprar</button></div>
+      </div>
+    </article>`).join("");
+  const e = $("empty");
+  e.style.display = list.length ? "none" : "block";
+  if (GAMES.length && !list.length){
+    e.querySelector("h3").textContent = "Nada encontrado";
+    e.querySelector("p").textContent = "Tente outro nome ou escolha outra plataforma.";
+  }
+}
+
+function renderCart(){
+  $("count").textContent = cart.length;
+  $("items").innerHTML = cart.length ? cart.map((g,i)=>
+    `<div class="item"><span>${esc(g.title)}<br><small>${g.price?brl(g.price):"Grátis"}</small></span><button data-rm="${i}">Remover</button></div>`).join("")
+    : `<p style="color:var(--muted)">Seu carrinho está vazio. Adicione um jogo do catálogo.</p>`;
+  $("total").textContent = brl(cart.reduce((s,g)=>s+g.price,0));
+  $("checkout").disabled = !cart.length;
+}
+
+function toggleCart(open){
+  $("drawer").classList.toggle("open",open);
+  $("scrim").classList.toggle("open",open);
+  $("drawer").setAttribute("aria-hidden",String(!open));
+}
+
+$("chips").addEventListener("click",e=>{const b=e.target.closest("[data-p]");if(!b)return;platform=b.dataset.p;renderChips();renderGrid()});
+$("grid").addEventListener("click",e=>{const b=e.target.closest("[data-id]");if(!b)return;
+  const g=GAMES.find(x=>x.id==b.dataset.id);if(g){cart.push(g);renderCart();toggleCart(true)}});
+$("items").addEventListener("click",e=>{const b=e.target.closest("[data-rm]");if(!b)return;cart.splice(+b.dataset.rm,1);renderCart()});
+$("q").addEventListener("input",e=>{query=e.target.value;renderGrid()});
+$("openCart").onclick=()=>toggleCart(true);
+$("closeCart").onclick=$("scrim").onclick=()=>toggleCart(false);
+document.addEventListener("keydown",e=>{if(e.key==="Escape")toggleCart(false)});
+$("checkout").onclick=()=>alert("Aqui entra a integração com o seu meio de pagamento.");
+
+renderChips();renderGrid();renderCart();
+</script>
+</body>
+</html>
